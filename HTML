@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Irrys Detailing – Ultimative Version</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  <!-- Google Fonts: Montserrat (Fließtext) & Playfair Display (Überschriften) -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /************************************************
+     * COLOR & TRANSITION VARIABLES
+     ***********************************************/
+    :root {
+      --color-bg: #111;
+      --color-black: #000;
+      --color-white: #fff;
+      --color-gray-dark: #1a1a1a;
+      --color-gray-mid: #333;
+      --color-gold: #d4af37;
+      --transition-speed: 0.4s;
+      --transition-ease: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /************************************************
+     * RESET & BASE STYLES
+     ***********************************************/
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--color-bg);
+      color: var(--color-white);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    a, button {
+      font-family: inherit;
+      cursor: pointer;
+      background: none;
+      border: none;
+      outline: none;
+      text-decoration: none;
+    }
+
+    /* Überschriften in eleganter Serifenschrift */
+    h1, h2, h3 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /************************************************
+     * HEADER
+     ***********************************************/
+    header {
+      background-color: var(--color-black);
+      padding: 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      border-bottom: 2px solid var(--color-gold);
+      transition: transform var(--transition-speed) var(--transition-ease);
+    }
+
+    header.hidden {
+      transform: translateY(-100%);
+    }
+
+    header img {
+      width: 140px;
+      height: auto;
+      transition: transform 0.3s var(--transition-ease);
+    }
+
+    header img:hover {
+      transform: scale(1.05) rotateZ(3deg);
+    }
+
+    nav {
+      display: flex;
+      gap: 20px;
+    }
+
+    nav a {
+      color: var(--color-white);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 5px 0;
+      transition: color var(--transition-speed) var(--transition-ease);
+    }
+
+    nav a:hover {
+      color: var(--color-gold);
+    }
+
+    nav a::after {
+      content: '';
+      display: block;
+      width: 0;
+      height: 2px;
+      background: var(--color-gold);
+      transition: width var(--transition-speed) var(--transition-ease);
+      margin-top: 4px;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    /* Mobile Menü-Button */
+    .menu-toggle {
+      display: none;
+      font-size: 1.5rem;
+      color: var(--color-white);
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    /************************************************
+     * HERO SECTION
+     ***********************************************/
+    .hero {
+      position: relative;
+      margin-top: 80px; /* Platz für den fixen Header */
+      height: calc(100vh - 80px);
+      width: 100%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-collage {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      width: 100%;
+      height: 100%;
+    }
+
+    .hero-collage img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.8s var(--transition-ease), transform 0.8s var(--transition-ease);
+    }
+
+    /* Neuer vanish-Effekt */
+    .hero-collage img.vanish {
+      transform: translateY(50px) rotateY(30deg) scale(0.8);
+      opacity: 0;
+      filter: blur(3px);
+      pointer-events: none;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(45deg, rgba(0,0,0,0.6), rgba(0,0,0,0.2));
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    .hero-overlay h1 {
+      font-size: 2.5rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+      margin-bottom: 20px;
+    }
+
+    .hero-overlay p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+    }
+
+    /************************************************
+     * CTA-Button: "Jetzt entdecken"
+     ***********************************************/
+    .btn-cta {
+      display: inline-block;
+      background: linear-gradient(135deg, #d4af37, #c4972c);
+      color: var(--color-black);
+      border-radius: 4px;
+      padding: 12px 28px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      transition: transform 0.3s var(--transition-ease), box-shadow 0.3s var(--transition-ease), background 0.3s var(--transition-ease);
+    }
+
+    .btn-cta:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 8px 20px rgba(212, 175, 55, 0.5);
+      background: linear-gradient(135deg, #c4972c, #d4af37);
+    }
+
+    /************************************************
+     * ON-SCROLL ANIMATION (fade-in-up)
+     ***********************************************/
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in-up {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .fade-in-up.appear {
+      animation: fadeInUp 1s var(--transition-ease) forwards;
+    }
+
+    /************************************************
+     * SECTIONS & CONTENT
+     ***********************************************/
+    main section {
+      padding: 80px 20px;
+      text-align: center;
+    }
+
+    main section h2 {
+      font-size: 2rem;
+      margin-bottom: 25px;
+      position: relative;
+      display: inline-block;
+    }
+
+    main section h2::after {
+      content: "";
+      display: block;
+      height: 2px;
+      background: var(--color-gold);
+      width: 50%;
+      margin: 8px auto 0;
+    }
+
+    main section p {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* PACKAGES */
+    .packages {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 40px;
+    }
+
+    .package {
+      background-color: var(--color-gray-dark);
+      border: 1px solid var(--color-gold);
+      border-radius: 6px;
+      padding: 25px;
+      box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
+      transition: transform var(--transition-speed) var(--transition-ease), box-shadow var(--transition-speed) var(--transition-ease);
+    }
+
+    .package:hover {
+      transform: translateY(-5px) scale(1.03);
+      box-shadow: 0 10px 25px rgba(212, 175, 55, 0.5);
+    }
+
+    .package h3 {
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+      color: var(--color-white);
+    }
+
+    .package p {
+      margin-bottom: 15px;
+    }
+
+    /* GEWERBLICHE KUNDEN */
+    .commercial {
+      background-color: var(--color-gray-dark);
+      border-radius: 6px;
+      padding: 30px;
+      margin-top: 40px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
+    }
+
+    .commercial h3 {
+      margin-bottom: 15px;
+      font-size: 1.4rem;
+    }
+
+    .commercial-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .commercial-buttons button {
+      border: 2px solid var(--color-gold);
+      color: var(--color-gold);
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 3px;
+      transition: background-color var(--transition-speed) var(--transition-ease), color var(--transition-speed) var(--transition-ease), transform var(--transition-speed) var(--transition-ease), box-shadow 0.3s var(--transition-ease);
+    }
+
+    .commercial-buttons button:hover {
+      background-color: var(--color-gold);
+      color: var(--color-black);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(212, 175, 55, 0.5);
+    }
+
+    /* ABOUT ME SECTION */
+    .about-me {
+      background-color: var(--color-gray-dark);
+      padding: 60px 20px;
+      text-align: left;
+    }
+
+    .founder-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 40px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .founder-text {
+      max-width: 600px;
+    }
+
+    .about-me-img {
+      max-width: 300px;
+      width: 100%;
+      height: auto;
+      display: block;
+      filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.5));
+      transition: transform 0.4s, filter 0.4s;
+    }
+
+    .about-me-img:hover {
+      transform: scale(1.05);
+      filter: drop-shadow(0 0 40px rgba(212, 175, 55, 0.7));
+    }
+
+    /************************************************
+     * MOBILE-ANPASSUNGEN
+     ***********************************************/
+    @media (max-width: 768px) {
+      .founder-container {
+        flex-direction: column;
+        text-align: center;
+      }
+      header img {
+        width: 110px;
+      }
+      /* Navigation als Dropdown im Header */
+      nav {
+        flex-direction: column;
+        position: absolute;
+        top: 70px;
+        right: 0;
+        left: 0;
+        background-color: var(--color-black);
+        padding: 10px 0;
+        display: none;
+      }
+      nav.active {
+        display: flex;
+      }
+      .menu-toggle {
+        display: block;
+      }
+      .hero-overlay h1 {
+        font-size: 2rem;
+      }
+      .hero-overlay p {
+        font-size: 1rem;
+      }
+      .about-me-img {
+        max-width: 80%;
+        margin: 20px auto 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header img {
+        width: 80px;
+      }
+      .hero-overlay h1 {
+        font-size: 1.6rem;
+      }
+      .hero-overlay p {
+        font-size: 0.9rem;
+      }
+      .packages {
+        grid-template-columns: 1fr;
+      }
+      .hero-collage {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(3, 1fr);
+      }
+      footer {
+        padding: 30px 10px;
+      }
+    }
+
+    /************************************************
+     * FOOTER
+     ***********************************************/
+    footer {
+      background-color: var(--color-black);
+      color: var(--color-white);
+      padding: 20px;
+      text-align: center;
+      margin-top: 40px;
+      position: relative;
+      border-top: 1px solid var(--color-gold);
+    }
+
+    footer p {
+      margin-bottom: 8px;
+    }
+
+    footer a {
+      color: var(--color-white);
+      transition: color var(--transition-speed) var(--transition-ease);
+    }
+
+    footer a:hover {
+      color: var(--color-gold);
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <img src="logo.png" alt="Irrys Detailing Logo">
+    <button class="menu-toggle" aria-label="Menü öffnen">☰</button>
+    <nav>
+      <a href="#packages">Pakete</a>
+      <a href="#commercial">Gewerbliche Kunden</a>
+      <a href="#contact">Kontakt</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero" aria-label="Intro Abschnitt">
+      <div class="hero-collage">
+        <img src="image11.jpg" alt="Autoinnenraum vor der Reinigung">
+        <img src="image22.jpg" alt="Polierte Fläche eines Autos">
+        <img src="image33.jpg" alt="Autositze während der Detailreinigung">
+      </div>
+      <div class="hero-overlay">
+        <h1>Willkommen bei Irrys Detailing</h1>
+        <p>Professionelle Fahrzeugpflege und Innenraumreinigung</p>
+        <button class="btn-cta" type="button" aria-label="Zu unseren Paketen scrollen" onclick="scrollToSection('#packages')">Jetzt entdecken</button>
+      </div>
+    </section>
+
+    <!-- PAKETE SECTION -->
+    <section id="packages" aria-labelledby="packages-heading" class="fade-in-up">
+      <h2 id="packages-heading">Unsere Pakete</h2>
+      <p>Wir bieten ausschließlich Innenraumaufbereitung an – für ein perfektes Fahrerlebnis.</p>
+      <div class="packages">
+        <div class="package fade-in-up">
+          <h3>Basisreinigung – Sauberer Start</h3>
+          <p>Einfache Staubsaugung und Wischen aller Oberflächen.</p>
+          <p><strong>Preis:</strong> 10 Euro</p>
+          <p>Optional: Alle Gläser im Innenraum reinigen (+5 Euro)</p>
+        </div>
+        <div class="package fade-in-up">
+          <h3>Standardreinigung – Goldene Mitte</h3>
+          <p>Erweiterte Reinigung mit Fokus auf Details. (Begutachtung notwendig)</p>
+        </div>
+        <div class="package fade-in-up">
+          <h3>Premiumpacket – Kompetenz</h3>
+          <p>Für höchste Ansprüche mit Tiefenreinigung. (Begutachtung notwendig)</p>
+        </div>
+        <div class="package fade-in-up">
+          <h3>Leasing - Rückgabe-Packet</h3>
+          <p>Optimal vorbereitet für die Fahrzeugrückgabe. (Begutachtung notwendig)</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- GEWERBLICHE KUNDEN SECTION -->
+    <section id="commercial" aria-labelledby="commercial-heading" class="fade-in-up">
+      <h2 id="commercial-heading">Gewerbliche Kunden</h2>
+      <div class="commercial fade-in-up">
+        <h3>Individuelle Lösungen für Firmenkunden</h3>
+        <p>Profitieren Sie von flexiblen Verträgen, regelmäßigen Reinigungen und maßgeschneiderten Angeboten für Ihren Fuhrpark.</p>
+        <p>Kontaktieren Sie uns für ein persönliches Angebot!</p>
+        <div class="commercial-buttons">
+          <button type="button" aria-label="E-Mail an Irrys Detailing senden" onclick="window.location.href='mailto:irrysdetailing@gmail.com'">E-Mail senden</button>
+          <button type="button" aria-label="Irrys Detailing anrufen" onclick="window.location.href='tel:+4915129594374'">Anrufen</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT ME SECTION -->
+    <section class="about-me fade-in-up" aria-labelledby="about-heading">
+      <h2 id="about-heading">Der Gründer</h2>
+      <div class="founder-container">
+        <div class="founder-text">
+          <p>
+            Guten Tag, ich heiße Illia – der Schöpfer und Leiter von Irrys Detailing.
+            Mit einem feinen Gespür für Ästhetik und einer unerschütterlichen Aufmerksamkeit
+            für Details verschreibe ich mich der Pflege Ihrer Fahrzeuginterieurs
+            auf höchstem Niveau.
+          </p>
+          <p>
+            Meine ausgedehnte Erfahrung in der professionellen Fahrzeugaufbereitung ermöglicht es mir,
+            Ihnen ein exquisites und luxuriöses Fahrerlebnis zu bieten. Es wäre mir eine Ehre,
+            Ihr Fahrzeug mit meisterhafter Präzision und passionierter Hingabe zu verwöhnen.
+          </p>
+        </div>
+        <img src="dein-foto.png" alt="Porträt von Illia, dem Gründer von Irrys Detailing" class="about-me-img">
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="contact">
+    <p>Adresse: Mühlbachstraße 20, Neusäß 86356</p>
+    <p>Telefon: <a href="tel:+4915129594374">+49 151 2959 4374</a></p>
+    <p>E-Mail: <a href="mailto:irrysdetailing@gmail.com">irrysdetailing@gmail.com</a></p>
+    <p>
+      <a href="https://wa.me/message/N4L52NUBCZZGL1" aria-label="WhatsApp Chat öffnen">WhatsApp</a> |
+      <a href="https://t.me/irrysdetailing" aria-label="Telegram Chat öffnen">Telegram</a> |
+      <a href="https://www.instagram.com/irrysdetailing" aria-label="Instagram Profil öffnen">Instagram</a>
+    </p>
+  </footer>
+
+  <!-- SINGLE-FILE JAVASCRIPT -->
+  <script>
+    // Smoothly scroll to target section
+    function scrollToSection(id) {
+      const element = document.querySelector(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Hide/Show Header on Scroll
+    (function handleHeaderScroll() {
+      const header = document.querySelector('header');
+      let lastScrollY = 0;
+      window.addEventListener('scroll', () => {
+        const currentScrollY = window.pageYOffset;
+        if (currentScrollY <= 0) {
+          header.classList.remove('hidden');
+          lastScrollY = 0;
+          return;
+        }
+        if (currentScrollY > lastScrollY && !header.classList.contains('hidden')) {
+          header.classList.add('hidden');
+        } else if (currentScrollY < lastScrollY && header.classList.contains('hidden')) {
+          header.classList.remove('hidden');
+        }
+        lastScrollY = currentScrollY;
+      });
+    })();
+
+    // Fade-In Animations via Intersection Observer & Mobile Menü-Toggle
+    document.addEventListener('DOMContentLoaded', () => {
+      const fadeInElements = document.querySelectorAll('.fade-in-up');
+      const options = { threshold: 0.1 };
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('appear');
+            obs.unobserve(entry.target);
+          }
+        });
+      }, options);
+      fadeInElements.forEach(el => observer.observe(el));
+
+      // Mobile Menü Toggle
+      const menuToggle = document.querySelector('.menu-toggle');
+      const nav = document.querySelector('header nav');
+      menuToggle.addEventListener('click', () => {
+        nav.classList.toggle('active');
+      });
+    });
+
+    // Hero Bilder "Vanish" Effekt on Scroll
+    (function handleHeroImagesVanish() {
+      const hero = document.querySelector('.hero');
+      const images = document.querySelectorAll('.hero-collage img');
+      if (!hero || images.length === 0) return;
+      const heroHeight = hero.offsetHeight;
+      window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+        if (scrollY > heroHeight / 2) {
+          images.forEach(img => img.classList.add('vanish'));
+        } else {
+          images.forEach(img => img.classList.remove('vanish'));
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
